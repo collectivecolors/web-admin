@@ -1,0 +1,37 @@
+#!/bin/bash
+#-------------------------------------------------------------------------------
+# 
+# init_web_platform [ $DIRECTORY ]
+# 
+#-------------------------------------------------------------------------------
+# Properties
+
+# Directory that contains all of the files for server initialization.
+
+INIT_DIR=$1
+
+if [ ! "$INIT_DIR" ]
+then
+  # Get the directory of this command.
+  CMD_NAME=`basename $0`
+  INIT_DIR=`which $CMD_NAME`
+  
+  if [ ! "$INIT_DIR" ]
+  then
+    cd `dirname $0`
+    INIT_DIR=`pwd`
+  
+  else
+    INIT_DIR=`dirname $INIT_DIR`  
+  fi  
+fi
+
+#-------------------------------------------------------------------------------
+# Start
+
+$INIT_DIR/install_git || exit $?
+$INIT_DIR/install_utilities || exit $((1 + $?))
+$INIT_DIR/install_apache || exit $((2 + $?))                      
+$INIT_DIR/install_php || exit $((22 + $?))
+$INIT_DIR/install_mysql || exit $((27 + $?))
+$INIT_DIR/install_drush || exit $((28 + $?))

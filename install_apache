@@ -1,0 +1,78 @@
+#!/bin/bash
+#-------------------------------------------------------------------------------
+#
+# install_apache
+#
+#-------------------------------------------------------------------------------
+# Properties
+
+
+
+#-------------------------------------------------------------------------------
+# Start
+
+echo "Installing the Apache2 webserver."
+
+sudo aptitude install apache2 \
+                      apache2-mpm-prefork \
+                      apache2-threaded-dev \
+                      ssl-cert \
+                      libapache2-mod-php5 || exit 1
+
+echo "Enabling mod_alias."
+sudo a2enmod alias || exit 2
+
+echo "Enabling mod_basic."
+sudo a2enmod auth_basic || exit 3
+
+echo "Enabling mod_authn_file."
+sudo a2enmod authn_file || exit 4
+
+echo "Enabling mod_authz_default."
+sudo a2enmod authz_default || exit 5
+
+echo "Enabling mod_authz_groupfile."
+sudo a2enmod authz_groupfile || exit 6
+
+echo "Enabling mod_authz_host."
+sudo a2enmod authz_host || exit 7
+
+echo "Enabling mod_authz_user."
+sudo a2enmod authz_user || exit 8
+
+echo "Enabling mod_autoindex."
+sudo a2enmod autoindex || exit 9
+
+echo "Enabling mod_deflate."
+sudo a2enmod deflate || exit 10
+
+echo "Enabling mod_dir."
+sudo a2enmod dir || exit 11
+
+echo "Enabling mod_env."
+sudo a2enmod env || exit 12
+
+echo "Enabling mod_mime."
+sudo a2enmod mime || exit 13
+
+echo "Enabling mod_negotiation."
+sudo a2enmod negotiation || exit 14
+
+echo "Enabling mod_php5."
+sudo a2enmod php5 || exit 15
+
+echo "Enabling mod_rewrite."                      
+sudo a2enmod rewrite || exit 16
+
+echo "Enabling mod_setenvif."
+sudo a2enmod setenvif || exit 17
+
+echo "Enabling mod_ssl."
+sudo a2enmod ssl || exit 18
+
+echo "Enabling mod_status."
+sudo a2enmod status || exit 19
+
+
+echo "Reinitializing Apache server."
+sudo /etc/init.d/apache2 restart || exit 20

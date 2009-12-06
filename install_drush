@@ -1,0 +1,36 @@
+#!/bin/bash
+#-------------------------------------------------------------------------------
+#
+# install_drush
+#
+#-------------------------------------------------------------------------------
+# Properties
+
+DRUPAL_PROJECT_URL="http://ftp.drupal.org/files/projects"
+
+DRUSH_FILE="drush-All-Versions-2.1.tar.gz"
+
+#-------------------------------------------------------------------------------
+# Start
+
+echo "Installing drush."
+
+if [ -z `which drush` ]
+then
+  cd /usr/local/bin || exit 1
+  sudo wget "$DRUPAL_PROJECT_URL/$DRUSH_FILE" || exit 2
+
+  sudo tar -xzf $DRUSH_FILE || exit 3
+  sudo rm $DRUSH_FILE || exit 4
+
+  sudo mv drush drush-files || exit 5
+
+  sudo addgroup drush || exit 6
+  sudo chown -R root:drush drush-files || exit 7 
+
+  sudo chmod 755 drush-files/drush || exit 8
+  sudo ln -s drush-files/drush drush || exit 9
+  
+else
+  echo "Drush already installed."
+fi

@@ -1,0 +1,47 @@
+#!/bin/bash
+#-------------------------------------------------------------------------------
+#
+# install_php
+#
+#-------------------------------------------------------------------------------
+# Properties
+
+APC_CONFIG="extension=apc.so
+
+apc.shm_size=40"
+
+
+UPLOADPROGRESS_CONFIG="extension=uploadprogress.so"
+
+#-------------------------------------------------------------------------------
+# Start
+
+echo "Installing PHP5 and related packages." 
+
+sudo aptitude install php5 \
+                      php5-cli \
+                      php5-curl \
+                      php5-dev \
+                      php5-gd \
+                      php5-imagick \
+                      php5-imap \
+                      php5-json \
+                      php5-mcrypt \
+                      php5-memcache \
+                      php5-mhash \
+                      php5-mysql \
+                      php5-xmlrpc \
+                      php-pear || exit 1
+
+
+echo "Installing the PECL APC op code cache."                      
+sudo pecl install apc || exit 2
+
+echo "$APC_CONFIG" | sudo tee /etc/php5/conf.d/apc.ini > /dev/null || exit 3
+
+
+echo "Installing the PECL upload progress extension."
+sudo pecl install uploadprogress || exit 4
+
+echo "$UPLOADPROGRESS_CONFIG" | sudo tee /etc/php5/conf.d/uploadprogress.ini \
+ > /dev/null || exit 5
