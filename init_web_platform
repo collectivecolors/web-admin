@@ -33,5 +33,5 @@ $INIT_DIR/install_git || exit $?
 $INIT_DIR/install_utilities || exit $((1 + $?))
 $INIT_DIR/install_apache || exit $((2 + $?))                      
 $INIT_DIR/install_php || exit $((22 + $?))
-$INIT_DIR/install_mysql || exit $((27 + $?))
-$INIT_DIR/install_drush || exit $((28 + $?))
+$INIT_DIR/install_mysql || exit $((29 + $?))
+$INIT_DIR/install_drush || exit $((30 + $?))

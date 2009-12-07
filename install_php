@@ -13,6 +13,8 @@ apc.shm_size=40"
 
 UPLOADPROGRESS_CONFIG="extension=uploadprogress.so"
 
+FILEINFO_CONFIG="extension=fileinfo.so"
+
 #-------------------------------------------------------------------------------
 # Start
 
@@ -45,3 +47,9 @@ sudo pecl install uploadprogress || exit 4
 
 echo "$UPLOADPROGRESS_CONFIG" | sudo tee /etc/php5/conf.d/uploadprogress.ini \
  > /dev/null || exit 5
+
+echo "Installing the PECL file info extension."
+sudo pecl install fileinfo || exit 6
+ 
+echo "$FILEINFO_CONFIG" | sudo tee /etc/php5/conf.d/fileinfo.ini > /dev/null \
+ || exit 7

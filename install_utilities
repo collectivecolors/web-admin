@@ -13,4 +13,8 @@
 
 echo "Installing general utilities."
 
-sudo aptitude install imagemagick || exit 1
+sudo aptitude install zip \
+                      unzip \
+                      libmagic-dev \
+                      imagemagick \
+ || exit 1
