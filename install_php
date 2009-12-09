@@ -108,8 +108,8 @@ sudo aptitude install php5 \
                       
 echo "Configuring PHP."
 
-cp -f "$OVERRIDE_DIR/apache2.php.ini" /etc/php5/apache2/php.ini || exit 3
-cp -f "$OVERRIDE_DIR/cli.php.ini" /etc/php5/cli/php.ini || exit 4
+sudo cp -f "$OVERRIDE_DIR/apache2.php.ini" /etc/php5/apache2/php.ini || exit 3
+sudo cp -f "$OVERRIDE_DIR/cli.php.ini" /etc/php5/cli/php.ini || exit 4
 
 
 echo "Installing the PECL APC op code cache."                      

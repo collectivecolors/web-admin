@@ -89,9 +89,9 @@ sudo aptitude install apache2 \
                       
 echo "Configuring the Apache webserver."
 
-cp -f "$OVERRIDE_DIR/apache2.conf" /etc/apache2/apache2.conf || exit 3
-cp -f "$OVERRIDE_DIR/ports.conf" /etc/apache2/ports.conf || exit 4
-cp -f "$OVERRIDE_DIR/envvars" /etc/apache2/envvars || exit 5
+sudo cp -f "$OVERRIDE_DIR/apache2.conf" /etc/apache2/apache2.conf || exit 3
+sudo cp -f "$OVERRIDE_DIR/ports.conf" /etc/apache2/ports.conf || exit 4
+sudo cp -f "$OVERRIDE_DIR/envvars" /etc/apache2/envvars || exit 5
 
 
 echo "Enabling mod_alias."
