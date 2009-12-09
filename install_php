@@ -6,6 +6,76 @@
 #-------------------------------------------------------------------------------
 # Properties
 
+HELP="
+The install_php command installs and configures PHP and some useful PECL
+extensions.
+
+WARNING: This script has only been tested with 8.04 LTS.
+
+--------------------------------------------------------------------------------
+
+ Developed by Adrian Webb of http://collectivecolors.com
+ Licensed under GPL v2
+
+ See the project page at:  http://github.com/collectivecolors/web-admin
+ Report issues here:       http://github.com/collectivecolors/web-admin/issues
+ 
+--------------------------------------------------------------------------------
+"
+
+USAGE="
+usage: install_php [ -h | --help ]                # Show usage information
+                   -------------------------------------------------------------
+                   [ -o | --override-dir <dir> ]  # Directory that contains server overrides
+                                                  # Defaults to <cmd-dir>/overrides
+"
+
+
+# Get the directory of this command.
+
+CMD_NAME=`basename $0`
+INIT_DIR=`which $CMD_NAME`
+  
+if [ ! "$INIT_DIR" ]
+then
+  cd `dirname $0`
+  INIT_DIR=`pwd`
+  
+else
+  INIT_DIR=`dirname $INIT_DIR`  
+fi
+
+OVERRIDE_DIR="$INIT_DIR/overrides"    
+
+
+# Parse parameters
+
+while test $# -ne 0
+do
+	case "$1" in
+	  
+  -h|--help)
+    echo "$HELP"
+    echo "$USAGE"
+    exit 0;;
+  
+	-o|--override-dir)
+    if [ ! "$2" ] || [ ! -d "$2" ]
+    then
+      echo "Override directory option requires an existing directory name."
+      echo "$USAGE"
+      exit 1
+    fi
+    
+		OVERRIDE_DIR="$2"
+    shift;;
+	  
+	*) break;;
+	esac
+	shift
+done
+
+
 APC_CONFIG="extension=apc.so
 
 apc.shm_size=40"
@@ -14,6 +84,7 @@ apc.shm_size=40"
 UPLOADPROGRESS_CONFIG="extension=uploadprogress.so"
 
 FILEINFO_CONFIG="extension=fileinfo.so"
+
 
 #-------------------------------------------------------------------------------
 # Start
@@ -33,23 +104,35 @@ sudo aptitude install php5 \
                       php5-mhash \
                       php5-mysql \
                       php5-xmlrpc \
-                      php-pear || exit 1
+                      php-pear || exit 2
+                      
+echo "Configuring PHP."
+
+cp -f "$OVERRIDE_DIR/apache2.php.ini" /etc/php5/apache2/php.ini || exit 3
+cp -f "$OVERRIDE_DIR/cli.php.ini" /etc/php5/cli/php.ini || exit 4
 
 
 echo "Installing the PECL APC op code cache."                      
-sudo pecl install apc || exit 2
+sudo pecl install apc || exit 5
 
-echo "$APC_CONFIG" | sudo tee /etc/php5/conf.d/apc.ini > /dev/null || exit 3
+echo "$APC_CONFIG" | sudo tee /etc/php5/conf.d/apc.ini > /dev/null || exit 6
 
 
 echo "Installing the PECL upload progress extension."
-sudo pecl install uploadprogress || exit 4
+sudo pecl install uploadprogress || exit 7
 
 echo "$UPLOADPROGRESS_CONFIG" | sudo tee /etc/php5/conf.d/uploadprogress.ini \
- > /dev/null || exit 5
+ > /dev/null || exit 8
 
 echo "Installing the PECL file info extension."
-sudo pecl install fileinfo || exit 6
+sudo pecl install fileinfo || exit 9
  
 echo "$FILEINFO_CONFIG" | sudo tee /etc/php5/conf.d/fileinfo.ini > /dev/null \
- || exit 7
+ || exit 10
+ 
+
+echo "Reinitializing Apache server."
+sudo /etc/init.d/apache2 restart || exit 11
+
+
+echo "PHP has been successfully installed and configured."

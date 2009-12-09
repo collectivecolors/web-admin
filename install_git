@@ -6,6 +6,48 @@
 #-------------------------------------------------------------------------------
 # Properties
 
+HELP="
+The install_git command installs Git and the Git daemon on an Ubuntu server.
+   
+WARNING: This script has only been tested with 8.04 LTS.
+
+The following packages are currently installed:
+
+1. git-core
+2. git-doc
+3. git-daemon-run
+
+--------------------------------------------------------------------------------
+
+ Developed by Adrian Webb of http://collectivecolors.com
+ Licensed under GPL v2
+
+ See the project page at:  http://github.com/collectivecolors/web-admin
+ Report issues here:       http://github.com/collectivecolors/web-admin/issues
+ 
+--------------------------------------------------------------------------------
+"
+
+USAGE="
+usage: install_git [ -h | --help ] # Show usage information
+"
+
+
+# Parse parameters
+
+while test $# -ne 0
+do
+	case "$1" in
+	  
+  -h|--help)
+    echo "$HELP"
+    echo "$USAGE"
+    exit 0;;
+    
+	*) break;;
+	esac
+	shift
+done
 
 
 #-------------------------------------------------------------------------------
@@ -16,3 +58,5 @@ echo "Installing the Git version control system."
 sudo aptitude install git-core \
                       git-doc \
                       git-daemon-run || exit 1
+                      
+echo "The Git version control system has been successfully installed."

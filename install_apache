@@ -6,6 +6,74 @@
 #-------------------------------------------------------------------------------
 # Properties
 
+HELP="
+The install_apache command installs and configures the Apache web server and 
+enables some default modules.
+
+WARNING: This script has only been tested with 8.04 LTS.
+
+--------------------------------------------------------------------------------
+
+ Developed by Adrian Webb of http://collectivecolors.com
+ Licensed under GPL v2
+
+ See the project page at:  http://github.com/collectivecolors/web-admin
+ Report issues here:       http://github.com/collectivecolors/web-admin/issues
+ 
+--------------------------------------------------------------------------------
+"
+
+USAGE="
+usage: install_apache [ -h | --help ]                # Show usage information
+                      ----------------------------------------------------------
+                      [ -o | --override-dir <dir> ]  # Directory that contains server overrides
+                                                     # Defaults to <cmd-dir>/overrides
+"
+
+
+# Get the directory of this command.
+
+CMD_NAME=`basename $0`
+INIT_DIR=`which $CMD_NAME`
+  
+if [ ! "$INIT_DIR" ]
+then
+  cd `dirname $0`
+  INIT_DIR=`pwd`
+  
+else
+  INIT_DIR=`dirname $INIT_DIR`  
+fi
+
+OVERRIDE_DIR="$INIT_DIR/overrides"    
+
+
+# Parse parameters
+
+while test $# -ne 0
+do
+	case "$1" in
+	  
+  -h|--help)
+    echo "$HELP"
+    echo "$USAGE"
+    exit 0;;
+  
+	-o|--override-dir)
+    if [ ! "$2" ] || [ ! -d "$2" ]
+    then
+      echo "Override directory option requires an existing directory name."
+      echo "$USAGE"
+      exit 1
+    fi
+    
+		OVERRIDE_DIR="$2"
+    shift;;
+	  
+	*) break;;
+	esac
+	shift
+done
 
 
 #-------------------------------------------------------------------------------
@@ -17,62 +85,72 @@ sudo aptitude install apache2 \
                       apache2-mpm-prefork \
                       apache2-threaded-dev \
                       ssl-cert \
-                      libapache2-mod-php5 || exit 1
+                      libapache2-mod-php5 || exit 2
+                      
+echo "Configuring the Apache webserver."
+
+cp -f "$OVERRIDE_DIR/apache2.conf" /etc/apache2/apache2.conf || exit 3
+cp -f "$OVERRIDE_DIR/ports.conf" /etc/apache2/ports.conf || exit 4
+cp -f "$OVERRIDE_DIR/envvars" /etc/apache2/envvars || exit 5
+
 
 echo "Enabling mod_alias."
-sudo a2enmod alias || exit 2
+sudo a2enmod alias || exit 6
 
 echo "Enabling mod_basic."
-sudo a2enmod auth_basic || exit 3
+sudo a2enmod auth_basic || exit 7
 
 echo "Enabling mod_authn_file."
-sudo a2enmod authn_file || exit 4
+sudo a2enmod authn_file || exit 8
 
 echo "Enabling mod_authz_default."
-sudo a2enmod authz_default || exit 5
+sudo a2enmod authz_default || exit 9
 
 echo "Enabling mod_authz_groupfile."
-sudo a2enmod authz_groupfile || exit 6
+sudo a2enmod authz_groupfile || exit 10
 
 echo "Enabling mod_authz_host."
-sudo a2enmod authz_host || exit 7
+sudo a2enmod authz_host || exit 11
 
 echo "Enabling mod_authz_user."
-sudo a2enmod authz_user || exit 8
+sudo a2enmod authz_user || exit 12
 
 echo "Enabling mod_autoindex."
-sudo a2enmod autoindex || exit 9
+sudo a2enmod autoindex || exit 13
 
 echo "Enabling mod_deflate."
-sudo a2enmod deflate || exit 10
+sudo a2enmod deflate || exit 14
 
 echo "Enabling mod_dir."
-sudo a2enmod dir || exit 11
+sudo a2enmod dir || exit 15
 
 echo "Enabling mod_env."
-sudo a2enmod env || exit 12
+sudo a2enmod env || exit 16
 
 echo "Enabling mod_mime."
-sudo a2enmod mime || exit 13
+sudo a2enmod mime || exit 17
 
 echo "Enabling mod_negotiation."
-sudo a2enmod negotiation || exit 14
+sudo a2enmod negotiation || exit 18
 
 echo "Enabling mod_php5."
-sudo a2enmod php5 || exit 15
+sudo a2enmod php5 || exit 19
 
 echo "Enabling mod_rewrite."                      
-sudo a2enmod rewrite || exit 16
+sudo a2enmod rewrite || exit 20
 
 echo "Enabling mod_setenvif."
-sudo a2enmod setenvif || exit 17
+sudo a2enmod setenvif || exit 21
 
 echo "Enabling mod_ssl."
-sudo a2enmod ssl || exit 18
+sudo a2enmod ssl || exit 22
 
 echo "Enabling mod_status."
-sudo a2enmod status || exit 19
+sudo a2enmod status || exit 23
 
 
 echo "Reinitializing Apache server."
-sudo /etc/init.d/apache2 restart || exit 20
+sudo /etc/init.d/apache2 restart || exit 24
+
+
+echo "Apache webserver has been successfully installed and configured."

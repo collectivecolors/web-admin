@@ -6,6 +6,50 @@
 #-------------------------------------------------------------------------------
 # Properties
 
+HELP="
+The install_utilities command installs some required utilities for other 
+packages as well as some handy utilities for administering a web server.
+   
+WARNING: This script has only been tested with 8.04 LTS.
+
+The following packages are currently installed:
+
+1. zip
+2. unzip
+3. libmagic-dev
+4. imagemagick
+
+--------------------------------------------------------------------------------
+
+ Developed by Adrian Webb of http://collectivecolors.com
+ Licensed under GPL v2
+
+ See the project page at:  http://github.com/collectivecolors/web-admin
+ Report issues here:       http://github.com/collectivecolors/web-admin/issues
+ 
+--------------------------------------------------------------------------------
+"
+
+USAGE="
+usage: install_utilities [ -h | --help ] # Show usage information
+"
+
+
+# Parse parameters
+
+while test $# -ne 0
+do
+	case "$1" in
+	  
+  -h|--help)
+    echo "$HELP"
+    echo "$USAGE"
+    exit 0;;
+    
+	*) break;;
+	esac
+	shift
+done
 
 
 #-------------------------------------------------------------------------------
@@ -18,3 +62,5 @@ sudo aptitude install zip \
                       libmagic-dev \
                       imagemagick \
  || exit 1
+ 
+echo "Successfully installed the general server utilities."

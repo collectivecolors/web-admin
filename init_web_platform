@@ -1,37 +1,156 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
 # 
-# init_web_platform [ $DIRECTORY ]
+# init_web_platform
 # 
 #-------------------------------------------------------------------------------
 # Properties
 
-# Directory that contains all of the files for server initialization.
+HELP="
+The init_web_platform command installs and configures software packages needed
+to run a Drupal capable HTTP(S) webserver on Ubuntu.
+  
+WARNING: This script has only been tested with 8.04 LTS.
 
-INIT_DIR=$1
+IMPORTANT: This script should be run by the administrative user only once.
 
+The following software systems are installed:
+
+1. Git version control system
+2. Apache2 webserver
+3. PHP language and PECL extensions
+4. MySQL database server
+5. Drush Drupal command line utilities
+6. Misc utilities (such as unzip and Imagemagick)
+
+
+When you have successfully run this script, you are ready to start creating web
+sites on this server.
+
+--------------------------------------------------------------------------------
+
+ Developed by Adrian Webb of http://collectivecolors.com
+ Licensed under GPL v2
+
+ See the project page at:  http://github.com/collectivecolors/web-admin
+ Report issues here:       http://github.com/collectivecolors/web-admin/issues
+ 
+--------------------------------------------------------------------------------
+"
+
+USAGE="
+usage: init_web_platform [ -h | --help ]                    # Show usage information
+                         -------------------------------------------------------
+                         [ -o | --override-dir <dir> ]      # Directory that contains configuration overrides
+                                                            # Defaults to <cmd-dir>/overrides
+                         -------------------------------------------------------
+                         [ -s | --script-dir <dir> ]        # Directory that contains server scripts 
+                                                            # Defaults to <cmd-dir>
+                         -------------------------------------------------------
+                         [ -v | --drush-version <version> ] # Drush version to install
+                                                            # Defaults to '2.1'
+"
+
+
+# Get the directory of this command.
+
+CMD_NAME=`basename $0`
+INIT_DIR=`which $CMD_NAME`
+  
 if [ ! "$INIT_DIR" ]
 then
-  # Get the directory of this command.
-  CMD_NAME=`basename $0`
-  INIT_DIR=`which $CMD_NAME`
+  cd `dirname $0`
+  INIT_DIR=`pwd`
   
-  if [ ! "$INIT_DIR" ]
-  then
-    cd `dirname $0`
-    INIT_DIR=`pwd`
+else
+  INIT_DIR=`dirname $INIT_DIR`  
+fi  
+
+OVERRIDE_DIR="$INIT_DIR/overrides"
+SCRIPT_DIR="$INIT_DIR"
+
+DRUSH_VERSION='2.1'
+
+
+# Parse parameters
+
+while test $# -ne 0
+do
+	case "$1" in
+	  
+  -h|--help)
+    echo "$HELP"
+    echo "$USAGE"
+    exit 0;;
   
-  else
-    INIT_DIR=`dirname $INIT_DIR`  
-  fi  
-fi
+	-o|--override-dir)
+    if [ ! "$2" ] || [ ! -d "$2" ]
+    then
+      echo "Override directory option requires an existing directory name."
+      echo "$USAGE"
+      exit 1
+    fi
+    
+		OVERRIDE_DIR="$2"
+    shift;;
+	
+	-s|--script-dir)
+    if [ ! "$2" ] || [ ! -d "$2" ]
+    then
+      echo "Script directory option requires an existing directory name."
+      echo "$USAGE"
+      exit 2
+    fi
+    
+		SCRIPT_DIR="$2"
+    shift;;
+	
+	-v|--drush-version)
+    if [ ! "$2" ]
+    then
+      echo "Drush version option requires a version number (Ex: 2.1)."
+      echo "$USAGE"
+      exit 3
+    fi
+    
+		DRUSH_VERSION="$2"
+    shift;;
+	  
+	*) break;;
+	esac
+	shift
+done
+
 
 #-------------------------------------------------------------------------------
 # Start
 
-$INIT_DIR/install_git || exit $?
-$INIT_DIR/install_utilities || exit $((1 + $?))
-$INIT_DIR/install_apache || exit $((2 + $?))                      
-$INIT_DIR/install_php || exit $((22 + $?))
-$INIT_DIR/install_mysql || exit $((29 + $?))
-$INIT_DIR/install_drush || exit $((30 + $?))
+# Preparing the setup folder
+
+chmod 700 $INIT_DIR/*
+chmod 644 $INIT_DIR/*.* # Don't allow execution of non scripts.
+
+chmod 700 $SCRIPT_DIR/*
+
+
+# Installation and configuration
+
+$SCRIPT_DIR/install_git || exit $?
+$SCRIPT_DIR/install_utilities || exit $((1 + $?))
+
+$SCRIPT_DIR/install_apache --override-dir $OVERRIDE_DIR || exit $((2 + $?))                      
+$SCRIPT_DIR/install_php --override-dir $OVERRIDE_DIR || exit $((26 + $?))
+$SCRIPT_DIR/install_mysql --override-dir $OVERRIDE_DIR || exit $((37 + $?))
+
+$SCRIPT_DIR/install_drush --version $DRUSH_VERSION || exit $((41 + $?))
+
+
+# Finalizing the setup folder
+
+chmod 600 "$INIT_DIR/init_web_platform"
+
+echo ''
+echo "Finished initializing the server web platform."
+echo ''
+echo "Now that this has successfully run, you are ready to start creating"
+echo "web sites."

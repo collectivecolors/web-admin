@@ -6,31 +6,95 @@
 #-------------------------------------------------------------------------------
 # Properties
 
+HELP="
+The install_drush command installs the Drush Drupal utility and assigns the
+drush group to the current user.
+
+WARNING: This script has only been tested with 8.04 LTS.
+
+--------------------------------------------------------------------------------
+
+ Developed by Adrian Webb of http://collectivecolors.com
+ Licensed under GPL v2
+
+ See the project page at:  http://github.com/collectivecolors/web-admin
+ Report issues here:       http://github.com/collectivecolors/web-admin/issues
+ 
+--------------------------------------------------------------------------------
+"
+
+USAGE="
+usage: install_drush [ -h | --help ]               # Show usage information
+                     -----------------------------------------------------------
+                     [ -v | --version <version> ]  # Drush version to retrieve
+                                                   # Defaults to '2.1'
+"
+
+DRUSH_VERSION='2.1'
+
+
+# Parse parameters
+
+while test $# -ne 0
+do
+	case "$1" in
+	  
+  -h|--help)
+    echo "$HELP"
+    echo "$USAGE"
+    exit 0;;
+  
+	-v|--version)
+    if [ ! "$2" ]
+    then
+      echo "Drush version option requires a version number (Ex: 2.1)."
+      echo "$USAGE"
+      exit 1
+    fi
+    
+		DRUSH_VERSION="$2"
+    shift;;
+	  
+	*) break;;
+	esac
+	shift
+done
+
+
 DRUPAL_PROJECT_URL="http://ftp.drupal.org/files/projects"
 
-DRUSH_FILE="drush-All-Versions-2.1.tar.gz"
+DRUSH_FILE="drush-All-Versions-$DRUSH_VERSION.tar.gz"
+
+CURR_USER=`whoami`
 
 #-------------------------------------------------------------------------------
 # Start
 
 echo "Installing drush."
 
-if [ -z `which drush` ]
-then
-  cd /usr/local/bin || exit 1
-  sudo wget "$DRUPAL_PROJECT_URL/$DRUSH_FILE" || exit 2
+cd /usr/local/bin || exit 1
 
-  sudo tar -xzf $DRUSH_FILE || exit 3
-  sudo rm $DRUSH_FILE || exit 4
+# Clean up in case drush is already installed.
+sudo rm drush
+sudo rm -fR drush-files
 
-  sudo mv drush drush-files || exit 5
 
-  sudo addgroup drush || exit 6
-  sudo chown -R root:drush drush-files || exit 7 
+sudo wget "$DRUPAL_PROJECT_URL/$DRUSH_FILE" || exit 2
 
-  sudo chmod 755 drush-files/drush || exit 8
-  sudo ln -s drush-files/drush drush || exit 9
-  
-else
-  echo "Drush already installed."
-fi
+sudo tar -xzf $DRUSH_FILE || exit 3
+sudo rm $DRUSH_FILE || exit 4
+
+sudo mv drush drush-files || exit 5
+
+sudo addgroup drush || exit 6
+sudo chown -R root:drush drush-files || exit 7 
+
+sudo chmod 755 drush-files/drush || exit 8
+sudo ln -s drush-files/drush drush || exit 9
+
+
+echo "Granting drush privileges to user; $CURR_USER"
+sudo adduser $CURR_USER drush || exit 10
+
+
+echo "Drush installed and permission granted for $CURR_USER"
