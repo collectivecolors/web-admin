@@ -86,18 +86,18 @@ sudo rm $DRUSH_FILE || exit 4
 
 sudo mv drush drush-files || exit 5
 
-sudo addgroup drush || exit 6
-sudo chown -R root:drush drush-files || exit 7 
+sudo chmod 755 drush-files/drush || exit 6
+sudo ln -s drush-files/drush drush || exit 7
 
-sudo chmod 755 drush-files/drush || exit 8
-sudo ln -s drush-files/drush drush || exit 9
+# Initialize the table.inc file needed by Drush.
+sudo drush > /dev/null
+
+sudo addgroup drush
+sudo chown -R root:drush drush-files || exit 9 
 
 
 echo "Granting drush privileges to user; $CURR_USER"
 sudo adduser $CURR_USER drush || exit 10
-
-# Initialize the table.inc file needed by Drush.
-sudo drush > /dev/null
 
 
 echo "Drush installed and permission granted for $CURR_USER"
