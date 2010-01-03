@@ -97,7 +97,7 @@ echo "Granting drush privileges to user; $CURR_USER"
 sudo adduser $CURR_USER drush || exit 10
 
 # Initialize the table.inc file needed by Drush.
-sudo drush
+sudo drush > /dev/null
 
 
 echo "Drush installed and permission granted for $CURR_USER"
