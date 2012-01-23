@@ -81,7 +81,7 @@ done
 
 APC_CONFIG="extension=apc.so
 
-apc.shm_size=60"
+apc.shm_size=60M"
 
 
 UPLOADPROGRESS_CONFIG="extension=uploadprogress.so"
