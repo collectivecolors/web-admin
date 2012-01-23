@@ -153,7 +153,7 @@ sudo a2enmod status || exit 23
 
 
 echo "Reinitializing Apache server."
-sudo /etc/init.d/apache2 restart || exit 24
+sudo /etc/init.d/apache2 restart
 
 
 echo "Apache webserver has been successfully installed and configured."
