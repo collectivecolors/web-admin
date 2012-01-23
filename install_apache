@@ -84,11 +84,11 @@ done
 
 echo "Installing the Apache2 webserver."
 
-sudo aptitude install apache2 \
-                      apache2-mpm-prefork \
-                      apache2-threaded-dev \
-                      ssl-cert \
-                      libapache2-mod-php5 || exit 2
+sudo apt-get install apache2 \
+                     apache2-mpm-prefork \
+                     apache2-threaded-dev \
+                     ssl-cert \
+                     libapache2-mod-php5 || exit 2
                       
 echo "Configuring the Apache webserver."
 

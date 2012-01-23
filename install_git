@@ -55,8 +55,8 @@ done
 
 echo "Installing the Git version control system."
 
-sudo aptitude install git-core \
-                      git-doc \
-                      git-daemon-run || exit 1
+sudo apt-get install git-core \
+                     git-doc \
+                     git-daemon-run || exit 1
                       
 echo "The Git version control system has been successfully installed."

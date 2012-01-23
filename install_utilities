@@ -57,10 +57,10 @@ done
 
 echo "Installing general utilities."
 
-sudo aptitude install zip \
-                      unzip \
-                      libmagic-dev \
-                      imagemagick \
+sudo apt-get install zip \
+                     unzip \
+                     libmagic-dev \
+                     imagemagick \
  || exit 1
  
 echo "Successfully installed the general server utilities."

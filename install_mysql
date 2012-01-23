@@ -82,7 +82,7 @@ done
 # Start
 
 echo "Installing the MySQL database server."
-sudo aptitude install mysql-server || exit 2
+sudo apt-get install mysql-server || exit 2
 
 echo "Configuring MySQL."
 sudo cp -f "$OVERRIDE_DIR/my.cnf" /etc/mysql/my.cnf || exit 3
