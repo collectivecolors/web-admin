@@ -48,7 +48,7 @@ usage: init_web_platform [ -h | --help ]                    # Show usage informa
                                                             # Defaults to <cmd-dir>
                          -------------------------------------------------------
                          [ -v | --drush-version <version> ] # Drush version to install
-                                                            # Defaults to '2.1'
+                                                            # Defaults to 'drush-All-Versions-5.x-dev'
 "
 
 
@@ -72,7 +72,7 @@ fi
 OVERRIDE_DIR="$INIT_DIR/overrides"
 SCRIPT_DIR="$INIT_DIR"
 
-DRUSH_VERSION='2.1'
+DRUSH_VERSION='drush-All-Versions-5.x-dev'
 
 
 # Parse parameters
@@ -111,7 +111,7 @@ do
 	-v|--drush-version)
     if [ ! "$2" ]
     then
-      echo "Drush version option requires a version number (Ex: 2.1)."
+      echo "Drush version option requires a version number (Ex: 7.x-4.5)."
       echo "$USAGE"
       exit 3
     fi
