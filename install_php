@@ -114,13 +114,13 @@ sudo cp -f "$OVERRIDE_DIR/cli.php.ini" /etc/php5/cli/php.ini || exit 4
 
 
 echo "Installing the PECL APC op code cache."                      
-sudo pecl install apc || exit 5
+sudo pecl install -f apc || exit 5
 
 echo "$APC_CONFIG" | sudo tee /etc/php5/conf.d/apc.ini > /dev/null || exit 6
 
 
 echo "Installing the PECL upload progress extension."
-sudo pecl install uploadprogress || exit 7
+sudo pecl install -f uploadprogress || exit 7
 
 echo "$UPLOADPROGRESS_CONFIG" | sudo tee /etc/php5/conf.d/uploadprogress.ini \
  > /dev/null || exit 8
