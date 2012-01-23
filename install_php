@@ -127,7 +127,7 @@ echo "$UPLOADPROGRESS_CONFIG" | sudo tee /etc/php5/conf.d/uploadprogress.ini \
 
 
 echo "Reinitializing Apache server."
-sudo /etc/init.d/apache2 restart || exit 11
+sudo /etc/init.d/apache2 restart
 
 
 echo "PHP has been successfully installed and configured."
