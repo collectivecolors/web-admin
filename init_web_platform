@@ -72,7 +72,7 @@ fi
 OVERRIDE_DIR="$INIT_DIR/overrides"
 SCRIPT_DIR="$INIT_DIR"
 
-DRUSH_VERSION='drush-All-Versions-5.x-dev'
+DRUSH_VERSION='drush-All-versions-5.x-dev'
 
 
 # Parse parameters

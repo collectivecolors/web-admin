@@ -27,10 +27,10 @@ USAGE="
 usage: install_drush [ -h | --help ]               # Show usage information
                      -----------------------------------------------------------
                      [ -v | --version <version> ]  # Drush version to retrieve
-                                                   # Defaults to 'drush-All-Versions-5.x-dev'
+                                                   # Defaults to 'drush-All-versions-5.x-dev'
 "
 
-DRUSH_VERSION='drush-All-Versions-5.x-dev'
+DRUSH_VERSION='drush-All-versions-5.x-dev'
 
 
 # Parse parameters
